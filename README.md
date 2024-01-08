@@ -15,6 +15,7 @@ You are allowed to
 - use
 - share
 - modify
+- your mom
 
 this project entirely or partially for free and even commercially. However, please consider the following:
 
