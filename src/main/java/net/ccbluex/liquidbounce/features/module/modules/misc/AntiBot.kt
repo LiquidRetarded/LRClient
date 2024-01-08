@@ -6,6 +6,7 @@
 package net.ccbluex.liquidbounce.features.module.modules.misc
 
 import net.ccbluex.liquidbounce.event.AttackEvent
+import net.ccbluex.liquidbounce.LiquidBounces
 import net.ccbluex.liquidbounce.event.EventTarget
 import net.ccbluex.liquidbounce.event.PacketEvent
 import net.ccbluex.liquidbounce.event.WorldEvent
@@ -23,6 +24,8 @@ import net.minecraft.network.play.server.S0BPacketAnimation
 import net.minecraft.network.play.server.S13PacketDestroyEntities
 import net.minecraft.network.play.server.S14PacketEntity
 import net.minecraft.network.play.server.S20PacketEntityProperties
+import net.minecraft.network.play.server.S0CPacketSpawnPlayer
+
 
 object AntiBot : Module("AntiBot", ModuleCategory.MISC) {
 
@@ -197,6 +200,7 @@ object AntiBot : Module("AntiBot", ModuleCategory.MISC) {
                 swingList += entity.entityId
         }
         if (packet is S0CPacketSpawnPlayer) {
+            val entity = mc.theWorld.getEntityByID(packet.entityID)
             if(LiquidBounce.combatManager.inCombat && !hasRemovedEntities.contains(packet.entityID)) {
                 spawnInCombat.add(packet.entityID)
             }
