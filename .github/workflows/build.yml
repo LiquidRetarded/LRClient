@@ -2,9 +2,9 @@ name: Build
 
 on:
   push:
-    branches: [ main ]
+    branches: [ legacy ]
   pull_request:
-    branches: [ main ]
+    branches: [ legacy ]
 
 jobs:
   build:
@@ -34,4 +34,4 @@ jobs:
           cd build/libs
           export JAR=$(find . -regex '.*liquidbounce-b[0-9|.]*\.jar')
           echo $JAR
-	  curl --connect-timeout 30 -o /dev/null -F 'payload_json={"content":null,"embeds":[{"color":2302093,"fields":[{"name":"Version","value":"```\n${{ env.VERSION }}\n```","inline":true},{"name":"Branch","value":"```\nmain\n```","inline":true}],"author":{"name":"Newest LRClient","icon_url":"https://tuilazerotwo.xyz/assets/logo.png"},"timestamp":"${{ env.DATE }}"}],"attachments":[]}' -F "file1=@$(echo $JAR)" ${{ secrets.WEBHOOK }}
+          curl --connect-timeout 30 -o /dev/null -F 'payload_json={"content":null,"embeds":[{"color":2302093,"fields":[{"name":"Version","value":"```\n${{ env.VERSION }}\n```","inline":true},{"name":"Branch","value":"```\nLegacy\n```","inline":true}],"author":{"name":"RylzSense Update!","icon_url":"https://tuilazerotwo.xyz/assets/logo.png"},"timestamp":"${{ env.DATE }}"}],"attachments":[]}' -F "file1=@$(echo $JAR)" ${{ secrets.WEBHOOK }}
