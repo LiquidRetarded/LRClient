@@ -51,6 +51,7 @@ object AntiBot : Module("AntiBot", ModuleCategory.MISC) {
     private val spawnInCombatValue = BoolValue("SpawnInCombat", false)
     private val duplicateInWorld by BoolValue("DuplicateInWorld", false)
     private val duplicateInTab by BoolValue("DuplicateInTab", false)
+    private val reusedEntityIdValue = BoolValue("ReusedEntityId", false)
     private val properties by BoolValue("Properties", false)
 
     private val alwaysInRadius by BoolValue("AlwaysInRadius", false)
@@ -64,6 +65,7 @@ object AntiBot : Module("AntiBot", ModuleCategory.MISC) {
     private val invisibleList = mutableListOf<Int>()
     private val propertiesList = mutableListOf<Int>()
     private val hitList = mutableListOf<Int>()
+    private val hasRemovedEntities = mutableListOf<Int>()
     private val notAlwaysInRadiusList = mutableListOf<Int>()
 
     fun isBot(entity: EntityLivingBase): Boolean {
@@ -82,6 +84,10 @@ object AntiBot : Module("AntiBot", ModuleCategory.MISC) {
 
         if (livingTime && entity.ticksExisted < livingTimeTicks)
             return true
+
+        if(reusedEntityIdValue.get() && hasRemovedEntities.contains(entity.entityId)) {
+            return false
+        }    
 
         if (ground && entity.entityId !in groundList)
             return true
@@ -254,6 +260,7 @@ object AntiBot : Module("AntiBot", ModuleCategory.MISC) {
         invisibleList.clear()
         notAlwaysInRadiusList.clear()
         spawnInCombat.clear()
+        hasRemovedEntities.clear()
     }
 
 }
