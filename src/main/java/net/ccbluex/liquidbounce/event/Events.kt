@@ -6,6 +6,7 @@
 package net.ccbluex.liquidbounce.event
 
 import net.minecraft.block.Block
+import net.minecraft.entity.EntityLivingBase
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.multiplayer.WorldClient
 import net.minecraft.entity.Entity
@@ -90,6 +91,7 @@ class SneakSlowDownEvent(var strafe: Float, var forward: Float) : Event()
  * Called in "onLivingUpdate" after when the player's sprint states are updated
  */
 class PostSprintUpdateEvent : Event()
+
 
 /**
  * Called in "moveFlying"
@@ -188,3 +190,5 @@ class ClickWindowEvent(val windowId: Int, val slotId: Int, val mouseButtonClicke
  * Called when LiquidBounce finishes starting up
  */
 class StartupEvent : Event()
+
+class EntityKilledEvent(val targetEntity: EntityLivingBase): Event()
