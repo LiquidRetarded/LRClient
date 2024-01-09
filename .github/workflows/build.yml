@@ -1,37 +1,36 @@
-name: Build
-on:
- push:
-  branches: [ main ]
-
 jobs:
  build:
-  runs-on: ubuntu-latest
-  permissions: 
-    contents: read
-    packages: write
+   runs-on: ubuntu-latest
+   permissions: 
+     contents: read
+     packages: write
 
-  steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+   steps:
+     - name: Checkout repository
+       uses: actions/checkout@v2
 
-    - name: Set up JDK 8
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'adopt'
-        java-version: 8
-        check-latest: true
+     - name: Set up JDK 8
+       uses: actions/setup-java@v2
+       with:
+         distribution: 'adopt'
+         java-version: 8
+         check-latest: true
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+     - name: Compute short SHA
+       id: sha
+       run: echo "SHORT_SHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
 
-    - name: Build with Gradle
-      run: ./gradlew build
+     - name: Grant execute permission for gradlew
+       run: chmod +x gradlew
 
-    - name: Rename Artifact
-      run: mv build/libs/*.jar build/libs/LRClient-${{ github.sha }}.jar
+     - name: Build with Gradle
+       run: ./gradlew build
 
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: ATP-${{ github.sha }}
-        path: build/libs/LRClient-${{ github.sha }}.jar
+     - name: Rename Artifact
+       run: mv build/libs/*.jar build/libs/LRClient-${{ env.SHORT_SHA }}.jar
+
+     - name: Upload a Build Artifact
+       uses: actions/upload-artifact@v3
+       with:
+         name: LRClient-${{ env.SHORT_SHA }}
+         path: build/libs/LRClient-${{ env.SHORT_SHA }}.jar
