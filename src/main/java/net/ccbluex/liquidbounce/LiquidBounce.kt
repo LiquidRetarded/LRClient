@@ -24,12 +24,10 @@ import net.ccbluex.liquidbounce.features.special.ClientFixes
 import net.ccbluex.liquidbounce.features.special.ClientRichPresence
 import net.ccbluex.liquidbounce.features.special.ClientRichPresence.showRichPresenceValue
 import net.ccbluex.liquidbounce.file.FileManager
-import net.ccbluex.liquidbounce.file.FileManager.loadAllConfigs
-import net.ccbluex.liquidbounce.file.FileManager.saveAllConfigs
+import net.ccbluex.liquidbounce.file.FileManager.*
 import net.ccbluex.liquidbounce.lang.LanguageManager.loadLanguages
 import net.ccbluex.liquidbounce.script.ScriptManager
-import net.ccbluex.liquidbounce.script.ScriptManager.enableScripts
-import net.ccbluex.liquidbounce.script.ScriptManager.loadScripts
+import net.ccbluex.liquidbounce.script.ScriptManager.*
 import net.ccbluex.liquidbounce.script.remapper.Remapper.loadSrg
 import net.ccbluex.liquidbounce.tabs.BlocksTab
 import net.ccbluex.liquidbounce.tabs.ExploitsTab
@@ -55,16 +53,14 @@ object LiquidBounce {
 
     // Client information
     const val CLIENT_NAME = "LiquidRetardedClient"
-    val clientVersionText = 0.2
-    val clientVersionNumber = 0.2 // version format: "b<VERSION>" on legacy
-    val clientCommit = gitInfo["git.commit.id.abbrev"]?.let { "git-$it" } ?: "unknown"
-    val clientBranch = gitInfo["git.branch"]?.toString() ?: "unknown"
-    const val IN_DEV = true
+    val clientVersionText = gitInfo["git.build.version"]?.toString() ?: "gay"
+    val clientVersionNumber = clientVersionText.substring(1).toIntOrNull() ?: 0  // version format: "b<VERSION>" on legacy
+    val clientCommit = gitInfo["git.commit.id.abbrev"]?.let { "git-$it" } ?: "gay"
+    val clientBranch = gitInfo["git.branch"]?.toString() ?: "gay"
     const val CLIENT_CREATOR = "CCBlueX, LiquidRetarded"
-    const val MINECRAFT_VERSION = "1.8.9"
     const val CLIENT_CLOUD = "https://cloud.liquidbounce.net/LiquidBounce"
 
-    val clientTitle = CLIENT_NAME + " " + clientVersionText + " " + clientCommit + "  | " + MINECRAFT_VERSION + if (IN_DEV) " | DEVELOPMENT BUILD" else ""
+    val clientTitle = CLIENT_NAME + " v" + clientVersionText
 
     var isStarting = true
 
