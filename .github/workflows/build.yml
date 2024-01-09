@@ -26,7 +26,7 @@ jobs:
      - name: Build with Gradle
        run: ./gradlew build
 
-     - name: Rename Artifact
+     - name: Rename JAR
        run: mv build/libs/*.jar build/libs/LRClient-${{ env.SHORT_SHA }}.jar
 
      - name: Upload a Build Artifact
