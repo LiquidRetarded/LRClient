@@ -3,16 +3,16 @@ package net.ccbluex.liquidbounce.utils.timer
 class MSTimer {
     var time = -1L
 
-    fun hasTimePassed(MS: Long): Boolean {
-        return System.currentTimeMillis() >= time + MS
+    fun hasTimePassed(delay: Int): Boolean {
+        return hasTimePassed(delay.toLong())
     }
 
-    fun hasTimeLeft(MS: Long): Long {
-        return MS + time - System.currentTimeMillis()
+    fun hasTimePassed(delay: Long): Boolean {
+        return System.currentTimeMillis() >= time + delay
     }
 
-    fun timePassed(): Long {
-        return System.currentTimeMillis() - time
+    fun hasTimeLeft(delay: Long): Long {
+        return delay + time - System.currentTimeMillis()
     }
 
     fun reset() {

@@ -11,7 +11,7 @@ import net.ccbluex.liquidbounce.api.messageOfTheDay
 import net.ccbluex.liquidbounce.cape.CapeService
 import net.ccbluex.liquidbounce.event.ClientShutdownEvent
 import net.ccbluex.liquidbounce.event.EventManager
-import net.ccbluex.liquidbounce.manager.CombatManager
+import net.ccbluex.liquidbounce.managers.CombatManager
 import net.ccbluex.liquidbounce.event.EventManager.callEvent
 import net.ccbluex.liquidbounce.event.EventManager.registerListener
 import net.ccbluex.liquidbounce.event.StartupEvent
