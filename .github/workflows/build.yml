@@ -46,7 +46,7 @@ jobs:
        -F 'payload_json={
          "embeds": [{
            "title": "New build completed!",
-           "description": "Version: ${{ github.sha }}",
+           "description": "Version: ${{ env.SHORT_SHA }}",
            "color": 1049821,
            "fields": [{
              "name": "Artifacts",
