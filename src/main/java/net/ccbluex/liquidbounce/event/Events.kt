@@ -19,7 +19,7 @@ import net.minecraft.util.EnumFacing
  *
  * @param targetEntity Attacked entity
  */
-class AttackEvent(val targetEntity: Entity?) : Event()
+class AttackEvent(val targetEntity: Entity) : CancellableEvent()
 
 /**
  * Called when minecraft get bounding box of block
@@ -33,6 +33,10 @@ class BlockBBEvent(blockPos: BlockPos, val block: Block, var boundingBox: AxisAl
     val y = blockPos.y
     val z = blockPos.z
 }
+/**
+ * Gay target killed?
+ */
+class EntityKilledEvent(val targetEntity: EntityLivingBase) : Event()
 
 /**
  * Called when player clicks a block
@@ -189,7 +193,3 @@ class ClickWindowEvent(val windowId: Int, val slotId: Int, val mouseButtonClicke
  */
 class StartupEvent : Event()
 
-/**
- * Called when entity except self was killed
- */
-class EntityKilledEvent(val targetEntity: EntityLivingBase): Event()
