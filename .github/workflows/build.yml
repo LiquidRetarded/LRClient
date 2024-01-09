@@ -42,18 +42,18 @@ jobs:
 
     - name: Send to Discord
       run: |
-        curl -X POST -H "Content-Type: application/json" \
-        -d '{
-          "embeds": [{
-            "title": "New build completed!",
-            "description": "Version: ${{ env.SHORT_SHA }}",
-            "color": 0x0099ff,
-            "fields": [{
-              "name": "Artifacts",
-              "value": "env.SHORT_SHA"
-            }]
-          }],
-          "files": ["https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts"]
-        }' \
-        ${{ secrets.webhook }}
+       curl -H "Content-Type: multipart/form-data" \
+       -F 'payload_json={
+         "embeds": [{
+           "title": "New build completed!",
+           "description": "Version: ${{ github.sha }}",
+           "color": 1049821,
+           "fields": [{
+             "name": "Artifacts",
+             "value": "[Download Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts)"
+           }]
+         }]
+       }' \
+       -F "file1=@build/libs/LRClient-${{ env.SHORT_SHA }}.jar" \
+       ${{ secrets.webhook }}
       shell: bash
