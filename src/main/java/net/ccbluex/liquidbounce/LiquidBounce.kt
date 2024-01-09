@@ -55,8 +55,8 @@ object LiquidBounce {
 
     // Client information
     const val CLIENT_NAME = "LiquidRetardedClient"
-    val clientVersionText = gitInfo["git.build.version"]?.toString() ?: "unknown"
-    val clientVersionNumber = clientVersionText.substring(1).toIntOrNull() ?: 0 // version format: "b<VERSION>" on legacy
+    val clientVersionText = 0.2
+    val clientVersionNumber = 0.2 // version format: "b<VERSION>" on legacy
     val clientCommit = gitInfo["git.commit.id.abbrev"]?.let { "git-$it" } ?: "unknown"
     val clientBranch = gitInfo["git.branch"]?.toString() ?: "unknown"
     const val IN_DEV = true
@@ -74,7 +74,7 @@ object LiquidBounce {
     val eventManager = EventManager
     val fileManager = FileManager
     val scriptManager = ScriptManager
-    lateinit var combatManager: CombatManager
+    val combatManager: CombatManager
 
     // HUD & ClickGUI
     val hud = HUD
