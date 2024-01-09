@@ -27,7 +27,7 @@ class CombatManager : Listenable, MinecraftInstance() {
         // bypass java.util.ConcurrentModificationException
         attackedEntityList.map { it }.forEach {
             if (it.isDead) {
-                FDPClient.eventManager.callEvent(EntityKilledEvent(it))
+                LiquidBounce.eventManager.callEvent(EntityKilledEvent(it))
                 attackedEntityList.remove(it)
             }
         }
