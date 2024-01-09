@@ -6,7 +6,6 @@
 package net.ccbluex.liquidbounce.event
 
 import net.minecraft.block.Block
-import net.minecraft.entity.EntityLivingBase
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.multiplayer.WorldClient
 import net.minecraft.entity.Entity
@@ -20,7 +19,7 @@ import net.minecraft.util.EnumFacing
  *
  * @param targetEntity Attacked entity
  */
-class AttackEvent(val targetEntity: Entity?) : CancellableEvent()
+class AttackEvent(val targetEntity: Entity?) : Event()
 
 /**
  * Called when minecraft get bounding box of block
@@ -91,7 +90,6 @@ class SneakSlowDownEvent(var strafe: Float, var forward: Float) : Event()
  * Called in "onLivingUpdate" after when the player's sprint states are updated
  */
 class PostSprintUpdateEvent : Event()
-
 
 /**
  * Called in "moveFlying"
