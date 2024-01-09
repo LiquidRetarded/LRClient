@@ -191,4 +191,7 @@ class ClickWindowEvent(val windowId: Int, val slotId: Int, val mouseButtonClicke
  */
 class StartupEvent : Event()
 
+/**
+ * Called when entity except self was killed
+ */
 class EntityKilledEvent(val targetEntity: EntityLivingBase): Event()
