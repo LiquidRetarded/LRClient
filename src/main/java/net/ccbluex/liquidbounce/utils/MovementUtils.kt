@@ -58,6 +58,16 @@ object MovementUtils : MinecraftInstance(), Listenable {
             val yaw = rotationYaw.toRadiansD()
             setPosition(posX - sin(yaw) * distance, posY, posZ + cos(yaw) * distance)
         }
+    fun updateBlocksPerSecond() {
+        if (mc.thePlayer == null || mc.thePlayer.ticksExisted < 1) {
+            bps = 0.0
+        }
+        val distance = mc.thePlayer.getDistance(lastX, lastY, lastZ)
+        lastX = mc.thePlayer.posX
+        lastY = mc.thePlayer.posY
+        lastZ = mc.thePlayer.posZ
+        bps = distance * (20 * mc.timer.timerSpeed)
+    }
 
     val direction
         get() = mc.thePlayer?.run {

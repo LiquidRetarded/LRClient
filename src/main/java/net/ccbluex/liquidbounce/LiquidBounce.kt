@@ -11,6 +11,7 @@ import net.ccbluex.liquidbounce.api.messageOfTheDay
 import net.ccbluex.liquidbounce.cape.CapeService
 import net.ccbluex.liquidbounce.event.ClientShutdownEvent
 import net.ccbluex.liquidbounce.event.EventManager
+import net.ccbluex.liquidbounce.handler.combat.CombatManager
 import net.ccbluex.liquidbounce.event.EventManager.callEvent
 import net.ccbluex.liquidbounce.event.EventManager.registerListener
 import net.ccbluex.liquidbounce.event.StartupEvent
@@ -73,6 +74,7 @@ object LiquidBounce {
     val eventManager = EventManager
     val fileManager = FileManager
     val scriptManager = ScriptManager
+    lateinit var combatManager: CombatManager
 
     // HUD & ClickGUI
     val hud = HUD
