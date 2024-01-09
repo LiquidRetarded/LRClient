@@ -1,8 +1,7 @@
 # LiquidRetardedClient
 A free mixin-based injection hacked-client for Minecraft using Minecraft Forge, supporting version 1.8.9
 
-Discord: @liquidretarded
-
+Discord: @liquidretarded (a.k.a @tuilazerotwo)
 ## Issues
 If you notice any bugs or missing features, you can let us know by opening an issue [here](https://github.com/LiquidRetarded/LRClient/issues).
 
