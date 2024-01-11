@@ -23,12 +23,13 @@ import net.minecraft.item.*
 import net.minecraft.network.play.client.C07PacketPlayerDigging
 import net.minecraft.network.play.client.C07PacketPlayerDigging.Action.*
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement
+import net.minecraft.network.play.client.C09PacketHeldItemChange
 import net.minecraft.util.BlockPos
 import net.minecraft.util.EnumFacing
 
 object NoSlow : Module("NoSlow", ModuleCategory.MOVEMENT, gameDetecting = false) {
 
-    private val swordMode by ListValue("SwordMode", arrayOf("None", "NCP", "UpdatedNCP", "AAC5", "SwitchItem"), "None")
+    private val swordMode by ListValue("SwordMode", arrayOf("None", "NCP", "UpdatedNCP", "AAC5", "SwitchItem", "GrimAC"), "None")
 
     private val blockForwardMultiplier by FloatValue("BlockForwardMultiplier", 1f, 0.2F..1f)
     private val blockStrafeMultiplier by FloatValue("BlockStrafeMultiplier", 1f, 0.2F..1f)
@@ -82,6 +83,13 @@ object NoSlow : Module("NoSlow", ModuleCategory.MOVEMENT, gameDetecting = false)
                         shouldSwap = false
                     }
                 
+                "grimac" ->
+                    if (event.eventState == EventState.PRE) {
+                        serverSlot = (serverSlot + 1) % 9
+                        serverSlot = currentItem
+                        sendPacket(C09PacketHeldItemChange(serverSlot))
+                    }
+
                 else -> return
             }
         }
@@ -103,6 +111,12 @@ object NoSlow : Module("NoSlow", ModuleCategory.MOVEMENT, gameDetecting = false)
                         serverSlot = currentItem
                         sendPacket(C08PacketPlayerBlockPlacement(BlockPos.ORIGIN, 255, heldItem, 0f, 0f, 0f))
                         shouldSwap = false
+                    }
+                "grimac" ->
+                    if (event.eventState == EventState.PRE) {
+                        serverSlot = (serverSlot + 1) % 9
+                        serverSlot = currentItem
+                        sendPacket(C09PacketHeldItemChange(serverSlot))
                     }
 
                 else -> return
@@ -150,6 +164,13 @@ object NoSlow : Module("NoSlow", ModuleCategory.MOVEMENT, gameDetecting = false)
                     if (event.eventState == EventState.PRE) {
                         serverSlot = (serverSlot + 1) % 9
                         serverSlot = currentItem
+                    }
+                    
+                "grimac" ->
+                    if (event.eventState == EventState.PRE) {
+                        serverSlot = (serverSlot + 1) % 9
+                        serverSlot = currentItem
+                        sendPacket(C09PacketHeldItemChange(serverSlot))
                     }
             }
         }

@@ -175,11 +175,9 @@ object KillAura : Module("KillAura", ModuleCategory.COMBAT, Keyboard.KEY_R) {
 
     // TODO: Make block range independent from attack range
     private var blockRange by object : FloatValue("BlockRange", range, 1f..8f) {
-        override fun isSupported() =
-            autoBlock != "Off" && smartAutoBlock
+        override fun isSupported() = autoBlock != "Off" && smartAutoBlock
 
-        override fun onChange(oldValue: Float, newValue: Float) =
-            newValue.coerceAtMost(this@KillAura.range)
+        override fun onChange(oldValue: Float, newValue: Float) = newValue.coerceAtMost(this@KillAura.range)
     }
 
     // Don't block when you can't get damaged
