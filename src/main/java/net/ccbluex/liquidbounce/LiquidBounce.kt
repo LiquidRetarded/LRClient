@@ -11,7 +11,6 @@ import net.ccbluex.liquidbounce.api.messageOfTheDay
 import net.ccbluex.liquidbounce.cape.CapeService
 import net.ccbluex.liquidbounce.event.ClientShutdownEvent
 import net.ccbluex.liquidbounce.event.EventManager
-import net.ccbluex.liquidbounce.managers.CombatManager
 import net.ccbluex.liquidbounce.event.EventManager.callEvent
 import net.ccbluex.liquidbounce.event.EventManager.registerListener
 import net.ccbluex.liquidbounce.event.StartupEvent
@@ -26,6 +25,7 @@ import net.ccbluex.liquidbounce.features.special.ClientRichPresence.showRichPres
 import net.ccbluex.liquidbounce.file.FileManager
 import net.ccbluex.liquidbounce.file.FileManager.loadAllConfigs
 import net.ccbluex.liquidbounce.file.FileManager.saveAllConfigs
+import net.ccbluex.liquidbounce.managers.CombatManager
 import net.ccbluex.liquidbounce.lang.LanguageManager.loadLanguages
 import net.ccbluex.liquidbounce.script.ScriptManager
 import net.ccbluex.liquidbounce.script.ScriptManager.enableScripts
@@ -54,13 +54,17 @@ import kotlin.concurrent.thread
 object LiquidBounce {
 
     // Client information
+<<<<<<< HEAD
     const val CLIENT_NAME = "LRClient"
+=======
+    const val CLIENT_NAME = "LiquidBounce"
+>>>>>>> 02585ea5173b3401d4c144e12d63ebb861122a94
     val clientVersionText = gitInfo["git.build.version"]?.toString() ?: "unknown"
     val clientVersionNumber = clientVersionText.substring(1).toIntOrNull() ?: 0 // version format: "b<VERSION>" on legacy
     val clientCommit = gitInfo["git.commit.id.abbrev"]?.let { "git-$it" } ?: "unknown"
     val clientBranch = gitInfo["git.branch"]?.toString() ?: "unknown"
     const val IN_DEV = true
-    const val CLIENT_CREATOR = "CCBlueX, LiquidRetarded"
+    const val CLIENT_CREATOR = "CCBlueX"
     const val MINECRAFT_VERSION = "1.8.9"
     const val CLIENT_CLOUD = "https://cloud.liquidbounce.net/LiquidBounce"
 
