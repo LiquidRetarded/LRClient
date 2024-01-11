@@ -9,21 +9,19 @@ import net.ccbluex.liquidbounce.event.*
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.modules.movement.Speed
+import net.ccbluex.liquidbounce.utils.*
 import net.ccbluex.liquidbounce.utils.MovementUtils.isOnGround
 import net.ccbluex.liquidbounce.utils.MovementUtils.speed
 import net.ccbluex.liquidbounce.utils.extensions.toDegrees
 import net.ccbluex.liquidbounce.utils.misc.RandomUtils.nextInt
-import net.ccbluex.liquidbounce.utils.realMotionX
-import net.ccbluex.liquidbounce.utils.realMotionY
-import net.ccbluex.liquidbounce.utils.realMotionZ
 import net.ccbluex.liquidbounce.utils.timing.MSTimer
 import net.ccbluex.liquidbounce.value.BoolValue
 import net.ccbluex.liquidbounce.value.FloatValue
 import net.ccbluex.liquidbounce.value.IntegerValue
 import net.ccbluex.liquidbounce.value.ListValue
 import net.minecraft.network.play.server.S12PacketEntityVelocity
+import net.minecraft.network.play.server.S32PacketConfirmTransaction
 import net.minecraft.network.play.server.S27PacketExplosion
-import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.sqrt
 
@@ -34,7 +32,7 @@ object Velocity : Module("Velocity", ModuleCategory.COMBAT) {
      */
     private val mode by ListValue(
         "Mode", arrayOf(
-            "Simple", "AAC", "AACPush", "AACZero", "AACv4",
+            "Simple", "AAC", "AACPush", "AACZero", "AACv4", "GrimS32",
             "Reverse", "SmoothReverse", "Jump", "Glitch", "Legit"
         ), "Simple"
     )
@@ -67,12 +65,30 @@ object Velocity : Module("Velocity", ModuleCategory.COMBAT) {
     private val hitsUntilJump by IntegerValue("ReceivedHitsUntilJump", 2, 0..5)
         { jumpCooldownMode == "ReceivedHits" && mode == "Jump" }
 
+
+    // GrimS32 credit: rylazius
+    private val cancelPacket by IntegerValue("CancelPacket", 6, 0..20) { mode == "GrimS32" }
+    private val resetPersec by IntegerValue("ResetPerMin", 10, 0..30) { mode == "GrimS32" }
+
+    private var maxMotionRangeValue: IntegerValue = object: IntegerValue("MaxMotionRange", -500, -1000..1000) {
+        override fun onChanged(oldValue: Int, newValue: Int) {
+            val v = minMotionRangeValue.get()
+            if (v > newValue) set(v)
+        }
+    }
+
+    private var minMotionRangeValue: IntegerValue = object: IntegerValue("MinMotionRange", -500, -1000..1000) {
+        override fun onChanged(oldValue: Int, newValue: Int) {
+            val v = maxMotionRangeValue.get()
+            if (v < newValue) set(v)
+        }
+    }
+
     // TODO: Could this be useful in other modes? (Jump?)
     // Limits
     private val limitMaxMotionValue = BoolValue("LimitMaxMotion", false) { mode == "Simple" }
-        private val maxXZMotion by FloatValue("MaxXZMotion", 0.4f, 0f..1.9f) { limitMaxMotionValue.isActive() }
-        private val maxYMotion by FloatValue("MaxYMotion", 0.36f, 0f..0.46f) { limitMaxMotionValue.isActive() }
-        //0.00075 is added silently
+    private val maxXZMotion by FloatValue("MaxXZMotion", 0.4f, 0f..1.9f) { limitMaxMotionValue.isActive() }
+    private val maxYMotion by FloatValue("MaxYMotion", 0.36f, 0f..0.46f) { limitMaxMotionValue.isActive() } //0.00075 is added silently
 
     // Vanilla XZ limits
     // Non-KB: 0.4 (no sprint), 0.9 (sprint)
@@ -89,6 +105,10 @@ object Velocity : Module("Velocity", ModuleCategory.COMBAT) {
 
     // SmoothReverse
     private var reverseHurt = false
+    
+    // GrimS32
+    private var grimTCancel = 0
+    private var updates = 0
 
     // AACPush
     private var jump = false
@@ -97,15 +117,14 @@ object Velocity : Module("Velocity", ModuleCategory.COMBAT) {
     private var limitUntilJump = 0
 
     override val tag
-        get() = if (mode == "Simple" || mode == "Legit") {
-            val horizontalPercentage = (horizontal * 100).toInt()
-            val verticalPercentage = (vertical * 100).toInt()
-
-            "$horizontalPercentage% $verticalPercentage%"
-        } else mode
+        get() = mode
 
     override fun onDisable() {
         mc.thePlayer?.speedInAir = 0.02F
+    }
+
+    override fun onEnable() {
+        grimTCancel = 0
     }
 
     @EventTarget
@@ -190,6 +209,15 @@ object Velocity : Module("Velocity", ModuleCategory.COMBAT) {
                 }
             }
 
+            "grims32" -> {
+                updates++
+
+                if (resetPersec > 0 && (updates >= 0 || updates >= resetPersec)) {
+                    updates = 0
+                    if (grimTCancel > 0) grimTCancel--
+                }
+            }
+
             "aaczero" ->
                 if (thePlayer.hurtTime > 0) {
                     if (!hasReceivedVelocity || thePlayer.onGround || thePlayer.fallDistance > 2F)
@@ -220,8 +248,7 @@ object Velocity : Module("Velocity", ModuleCategory.COMBAT) {
         }
     }
 
-    // TODO: Recode
-    private fun getDirection(): Double {
+    fun getDirection(): Double {
         var moveYaw = mc.thePlayer.rotationYaw
         if (mc.thePlayer.moveForward != 0f && mc.thePlayer.moveStrafing == 0f) {
             moveYaw += if (mc.thePlayer.moveForward > 0) 0 else 180
@@ -240,9 +267,6 @@ object Velocity : Module("Velocity", ModuleCategory.COMBAT) {
 
         val packet = event.packet
 
-        if (event.isCancelled)
-            return
-
         if (
             (
                 packet is S12PacketEntityVelocity
@@ -251,8 +275,8 @@ object Velocity : Module("Velocity", ModuleCategory.COMBAT) {
                     && (packet.motionX != 0 || packet.motionZ != 0)
             ) || (
                 packet is S27PacketExplosion
-                    && (thePlayer.motionY + packet.field_149153_g) > 0.0
-                    && ((thePlayer.motionX + packet.field_149152_f) != 0.0 || (thePlayer.motionZ + packet.field_149159_h) != 0.0)
+                    && packet.field_149153_g > 0f
+                    && (packet.field_149152_f != 0f || packet.field_149159_h != 0f)
             )
         ) {
             velocityTimer.reset()
@@ -263,30 +287,43 @@ object Velocity : Module("Velocity", ModuleCategory.COMBAT) {
                 "aac", "reverse", "smoothreverse", "aaczero" -> hasReceivedVelocity = true
 
                 "jump" -> {
-                    // TODO: Recode and make all velocity modes support velocity direction checks
-                    var packetDirection = 0.0
+                    var packetDirection: Double = 0.0
                     when (packet) {
                         is S12PacketEntityVelocity -> {
-                            val motionX = packet.motionX.toDouble()
-                            val motionZ = packet.motionZ.toDouble()
+                            val motionX: Double = packet.motionX.toDouble()
+                            val motionZ: Double = packet.motionZ.toDouble()
 
                             packetDirection = atan2(motionX, motionZ)
                         }
                         is S27PacketExplosion -> {
-                            val motionX = thePlayer.motionX + packet.field_149152_f
-                            val motionZ = thePlayer.motionZ + packet.field_149159_h
+                            val motionX: Double = packet.field_149152_f.toDouble()
+                            val motionZ: Double = packet.field_149159_h.toDouble()
 
                             packetDirection = atan2(motionX, motionZ)
                         }
                     }
                     val degreePlayer = getDirection()
                     val degreePacket = Math.floorMod(packetDirection.toDegrees().toInt(), 360).toDouble()
-                    var angle = abs(degreePacket + degreePlayer)
-                    val threshold = 120.0
+                    var angle = Math.abs(degreePacket + degreePlayer)
+                    val threshold = 90.0
                     angle = Math.floorMod(angle.toInt(), 360).toDouble()
                     val inRange = angle in 180-threshold/2..180+threshold/2
                     if (inRange)
                         hasReceivedVelocity = true
+                }
+
+                "grims32" -> {
+                    val packet = event.packet
+                    if (packet is S12PacketEntityVelocity && packet.entityID == mc.thePlayer.entityId) {
+                        if (packet.motionX < minMotionRangeValue.get() || packet.motionX > maxMotionRangeValue.get() || packet.motionZ < minMotionRangeValue.get() || packet.motionZ > maxMotionRangeValue.get()) {
+                            event.cancelEvent()
+                            grimTCancel = cancelPacket
+                        }
+                    }
+                    if (packet is S32PacketConfirmTransaction && grimTCancel > 0) {
+                        event.cancelEvent()
+                        grimTCancel--
+                    }
                 }
 
                 "glitch" -> {
@@ -326,7 +363,7 @@ object Velocity : Module("Velocity", ModuleCategory.COMBAT) {
         val player = mc.thePlayer ?: return
 
         if (mode == "Jump" && hasReceivedVelocity) {
-            if (!player.isJumping && nextInt(endExclusive = 100) < chance && shouldJump() && player.isSprinting && player.onGround && player.hurtTime == 9) {
+            if (nextInt(endExclusive = 100) < chance && shouldJump() && player.isSprinting && player.onGround && player.hurtTime == 9) {
                 player.jump()
                 limitUntilJump = 0
             }
