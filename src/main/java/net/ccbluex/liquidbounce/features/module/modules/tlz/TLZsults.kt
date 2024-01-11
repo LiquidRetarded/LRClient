@@ -9,6 +9,8 @@ import net.ccbluex.liquidbounce.event.EventTarget
 import net.ccbluex.liquidbounce.event.UpdateEvent
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
+import net.ccbluex.liquidbounce.utils.block.BlockUtils.getBlock
+import net.minecraft.init.Blocks.air
 import net.minecraft.entity.player.EntityPlayer
 import kotlin.random.Random
 

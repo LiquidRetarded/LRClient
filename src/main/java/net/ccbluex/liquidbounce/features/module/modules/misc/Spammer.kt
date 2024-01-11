@@ -40,7 +40,7 @@ object Spammer : Module("Spammer", ModuleCategory.MISC, subjective = true) {
     }
 
     private val message by
-        TextValue("Message", "$CLIENT_NAME Client | liquidbounce(.net) | CCBlueX on yt")
+        TextValue("Message", "$CLIENT_NAME Client | tuilazerotow(.xyz) | CCBlueX, TLZItsMe on yt")
 
     private val custom by BoolValue("Custom", false)
 
