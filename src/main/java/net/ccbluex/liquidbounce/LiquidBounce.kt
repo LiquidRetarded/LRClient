@@ -54,13 +54,13 @@ import kotlin.concurrent.thread
 object LiquidBounce {
 
     // Client informations
-    const val CLIENT_NAME = "LRClient"
+    const val CLIENT_NAME = "LiquidRetardedClient"
     val clientVersionText = gitInfo["git.build.version"]?.toString() ?: "unknown"
     val clientVersionNumber = clientVersionText.substring(1).toIntOrNull() ?: 0 // version format: "b<VERSION>" on legacy
     val clientCommit = gitInfo["git.commit.id.abbrev"]?.let { "git-$it" } ?: "unknown"
     val clientBranch = gitInfo["git.branch"]?.toString() ?: "unknown"
     const val IN_DEV = true
-    const val CLIENT_CREATOR = "CCBlueX"
+    const val CLIENT_CREATOR = "CCBlueX, TLZ"
     const val MINECRAFT_VERSION = "1.8.9"
     const val CLIENT_CLOUD = "https://cloud.liquidbounce.net/LiquidBounce"
 
