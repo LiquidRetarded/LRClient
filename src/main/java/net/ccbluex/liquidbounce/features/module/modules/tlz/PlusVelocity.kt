@@ -5,6 +5,7 @@
  */
 package net.ccbluex.liquidbounce.features.module.modules.tlz
 
+import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.event.*
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
@@ -20,6 +21,10 @@ import net.ccbluex.liquidbounce.value.FloatValue
 import net.ccbluex.liquidbounce.value.IntegerValue
 import net.ccbluex.liquidbounce.value.ListValue
 import net.minecraft.network.play.server.*
+import net.minecraft.network.play.client.*
+import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook
+import net.minecraft.util.*
+import net.ccbluex.liquidbounce.ui.client.hud.element.elements.Notification
 import kotlin.math.atan2
 import kotlin.math.sqrt
 
@@ -90,17 +95,14 @@ object PlusVelocity : Module("PlusVelocity", ModuleCategory.TLZ) {
 
     override fun onEnable() {
         grimTCancel = 0
-    }
-    // GrimLastest
-    private var canSpoof = false
-    private var canCancel = false
-
-    override fun onEnable() {
         canSpoof = false
         canCancel = false
 
         LiquidBounce.hud.addNotification(Notification("Make sure you changed to 1.17 to use velocity.", Notification.Type.ERROR))    
     }
+    // GrimLastest
+    private var canSpoof = false
+    private var canCancel = false
 
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
