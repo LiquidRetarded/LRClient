@@ -25,8 +25,9 @@ class GuiWelcome : GuiScreen() {
         Fonts.font35.run {
             drawCenteredString("Thank you for downloading and installing our client!", width / 2F, 70f, 0xffffff, true)
             drawCenteredString("Here is some information you might find useful if you are using LRClient for the first time.", width / 2F, 70f + fontHeight, 0xffffff, true)
-            drawCenteredString("Your mom is good!", width / 2F, 70f + fontHeight, 0xffffff, true)
-        }
+
+            drawCenteredString("Your Mom Is Good!", width / 2F, 80f + fontHeight * 3, 0xffffff, true)
+           }
 
         super.drawScreen(mouseX, mouseY, partialTicks)
 
