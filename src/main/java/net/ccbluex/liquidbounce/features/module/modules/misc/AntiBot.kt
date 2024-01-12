@@ -47,8 +47,8 @@ object AntiBot : Module("AntiBot", ModuleCategory.MISC) {
     private val ping by BoolValue("Ping", false)
     private val needHit by BoolValue("NeedHit", false)
     private val spawnInCombatValue = BoolValue("SpawnInCombat", false)
-    private val duplicateInWorld by BoolValue("DuplicateInWorld", false)
-    private val duplicateInTab by BoolValue("DuplicateInTab", false)
+    private val duplicateInWorld = BoolValue("DuplicateInWorld", false)
+    private val duplicateInTab = BoolValue("DuplicateInTab", false)
     private val duplicateCompareMode = ListValue("DuplicateCompareMode", arrayOf("OnTime", "WhenSpawn"), "OnTime") {
         duplicateInTab.get() || duplicateInWorld.get()
     }

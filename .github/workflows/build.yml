@@ -34,12 +34,6 @@ jobs:
     - name: Rename JAR
       run: mv build/libs/*.jar build/libs/LRClient-${{ env.SHORT_SHA }}.jar
 
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: LRClient-${{ env.SHORT_SHA }}
-        path: build/libs/LRClient-${{ env.SHORT_SHA }}.jar
-
     - name: Send to Discord
       run: |
        curl -H "Content-Type: multipart/form-data" \
