@@ -1,59 +1,59 @@
 name: YOUR MOM
 on:
  push:
-  branches: [ main ]
+ branches: [ main ]
 
 jobs:
  build:
-  runs-on: ubuntu-latest
-  permissions: 
-    contents: read
-    packages: write
+ runs-on: ubuntu-latest
+ permissions: 
+   contents: read
+   packages: write
 
-  steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+ steps:
+   - name: Checkout repository
+     uses: actions/checkout@v2
 
-    - name: Set up JDK 8
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'adopt'
-        java-version: 8
-        check-latest: true
+   - name: Set up JDK 8
+     uses: actions/setup-java@v2
+     with:
+       distribution: 'adopt'
+       java-version: 8
+       check-latest: true
 
-    - name: Compute short SHA
-      id: sha
-      run: echo "SHORT_SHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+   - name: Compute short SHA
+     id: sha
+     run: echo "SHORT_SHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+   - name: Grant execute permission for gradlew
+     run: chmod +x gradlew
 
-    - name: Build with Gradle
-      run: ./gradlew build
+   - name: Build with Gradle
+     run: ./gradlew build
 
-    - name: Rename JAR
-      run: mv build/libs/*.jar build/libs/LRClient-${{ env.SHORT_SHA }}.jar
+   - name: Rename JAR
+     run: mv build/libs/*.jar build/libs/LRClient-${{ env.SHORT_SHA }}.jar
 
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: LRClient-${{ env.SHORT_SHA }}
-        path: build/libs/LRClient-${{ env.SHORT_SHA }}.jar
+   - name: Upload a Build Artifact
+     uses: actions/upload-artifact@v3
+     with:
+       name: LRClient-${{ env.SHORT_SHA }}
+       path: build/libs/LRClient-${{ env.SHORT_SHA }}.jar
 
-    - name: Send to Discord
-      run: |
-       curl -H "Content-Type: multipart/form-data" \
-       -F 'payload_json={
-         "embeds": [{
-           "title": "New build completed!",
-           "description": "Version: ${{ env.SHORT_SHA }}",
-           "color": 1049821,
-           "fields": [{
-             "name": "Artifacts",
-             "value": "[Download Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts)"
-           }]
-         }]
-       }' \
-       -F "file1=@build/libs/LRClient-${{ env.SHORT_SHA }}.jar" \
-       ${{ secrets.webhook }}
-      shell: bash
+   - name: Send to Discord
+     run: |
+      curl -H "Content-Type: multipart/form-data" \
+      -F 'payload_json={
+        "embeds": [{
+          "title": "New build completed!",
+          "description": "Version: ${{ env.SHORT_SHA }}",
+          "color": 1049821,
+          "fields": [{
+            "name": "Commit Message",
+            "value": "$(git log -1 --pretty=format:'%s')"
+          }]
+        }]
+      }' \
+      -F "file1=@build/libs/LRClient-${{ env.SHORT_SHA }}.jar" \
+      ${{ secrets.webhook }}
+     shell: bash
