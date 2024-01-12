@@ -207,6 +207,7 @@ object ModuleManager : Listenable {
             Zoot,
             KeepSprint,
             PlusVelocity,
+            ZPackSpoofer,
         )
 
         InventoryManager.startCoroutine()
