@@ -21,7 +21,7 @@ import net.ccbluex.liquidbounce.value.ListValue
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.network.play.server.*
-import net.ccbluex.liquidbounce.utils.PacketUtils.*
+import net.ccbluex.liquidbounce.utils.PacketUtils
 
 
 object AntiBot : Module("AntiBot", ModuleCategory.MISC) {
@@ -48,7 +48,9 @@ object AntiBot : Module("AntiBot", ModuleCategory.MISC) {
     private val spawnInCombatValue = BoolValue("SpawnInCombat", false)
     private val duplicateInWorld by BoolValue("DuplicateInWorld", false)
     private val duplicateInTab by BoolValue("DuplicateInTab", false)
-    private val duplicateCompareMode = ListValue("DuplicateCompareMode", arrayOf("OnTime", "WhenSpawn"), "OnTime").displayable { duplicateInTab.get() || duplicateInWorld.get() }
+    private val duplicateCompareMode = ListValue("DuplicateCompareMode", arrayOf("OnTime", "WhenSpawn"), "OnTime") {
+        duplicateInTab.get() || duplicateInWorld.get()
+    }
     private val reusedEntityIdValue = BoolValue("ReusedEntityId", false)
     private val properties by BoolValue("Properties", false)
 
@@ -215,8 +217,8 @@ object AntiBot : Module("AntiBot", ModuleCategory.MISC) {
             if (duplicateCompareMode.equals("WhenSpawn") && packet.action == S38PacketPlayerListItem.Action.ADD_PLAYER) {
                 packet.entries.forEach { entry ->
                     val name = entry.profile.name
-                    if (duplicateInWorldValue.get() && mc.theWorld.playerEntities.any { it.name == name } ||
-                        duplicateInTabValue.get() && mc.netHandler.playerInfoMap.any { it.gameProfile.name == name }) {
+                    if (duplicateInWorld.get() && mc.theWorld.playerEntities.any { it.name == name } ||
+                        duplicateInTab.get() && mc.netHandler.playerInfoMap.any { it.gameProfile.name == name }) {
                         duplicate.add(entry.profile.id)
                     }
                 }
