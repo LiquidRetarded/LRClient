@@ -66,7 +66,9 @@ class Notification(private val message: String, private val delay: Float = 60F) 
      * Fade state for animation
      */
     enum class FadeState { IN, STAY, OUT, END }
-
+    enum class Type {
+        SUCCESS, INFO, WARNING, ERROR
+    }
     init {
         textLength = Fonts.font35.getStringWidth(message)
     }
@@ -84,6 +86,14 @@ class Notification(private val message: String, private val delay: Float = 60F) 
         // Animation
         val delta = deltaTime
         val width = textLength + 8F
+
+        val enumColor = when (type) {
+            Type.SUCCESS -> Color(80, 255, 80).rgb
+            Type.ERROR -> Color(255, 80, 80).rgb
+            Type.INFO -> Color(255, 255, 255).rgb
+            Type.WARNING -> Color(255, 255, 0).rgb
+        }
+
 
         when (fadeState) {
             FadeState.IN -> {

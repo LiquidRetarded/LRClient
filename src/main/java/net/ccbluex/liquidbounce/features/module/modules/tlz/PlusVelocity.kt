@@ -114,7 +114,7 @@ object PlusVelocity : Module("PlusVelocity", ModuleCategory.TLZ) {
         when (mode.lowercase()) {
 
             "grimlastest" -> {
-             if (onVelocity.get().equals("Always", true) || (onVelocity.get().equals("CombatManager", true) && MinusBounce.combatManager.inCombat)) {
+             if (onVelocity.get().equals("Always", true) || (onVelocity.get().equals("CombatManager", true) && LiquidBounce.combatManager.inCombat)) {
              canCancel = true
             }
 
