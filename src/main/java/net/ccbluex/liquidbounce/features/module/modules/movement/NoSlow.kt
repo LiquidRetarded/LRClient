@@ -14,7 +14,7 @@ import net.ccbluex.liquidbounce.features.module.modules.combat.KillAura.blockSta
 import net.ccbluex.liquidbounce.features.module.modules.player.FakeLag
 import net.ccbluex.liquidbounce.utils.ClientUtils
 import net.ccbluex.liquidbounce.utils.MovementUtils.isMoving
-import net.ccbluex.liquidbounce.utils.PacketUtils.sendPacket
+import net.ccbluex.liquidbounce.utils.PacketUtils.*
 import net.ccbluex.liquidbounce.utils.inventory.InventoryUtils.serverSlot
 import net.ccbluex.liquidbounce.value.BoolValue
 import net.ccbluex.liquidbounce.value.FloatValue
@@ -34,12 +34,12 @@ object NoSlow : Module("NoSlow", ModuleCategory.MOVEMENT, gameDetecting = false)
     private val blockForwardMultiplier by FloatValue("BlockForwardMultiplier", 1f, 0.2F..1f)
     private val blockStrafeMultiplier by FloatValue("BlockStrafeMultiplier", 1f, 0.2F..1f)
 
-    private val consumePacket by ListValue("ConsumeMode", arrayOf("None", "UpdatedNCP", "AAC5", "SwitchItem"), "None")
+    private val consumePacket by ListValue("ConsumeMode", arrayOf("None", "UpdatedNCP", "AAC5", "SwitchItem", "GrimAC"), "None")
 
     private val consumeForwardMultiplier by FloatValue("ConsumeForwardMultiplier", 1f, 0.2F..1f)
     private val consumeStrafeMultiplier by FloatValue("ConsumeStrafeMultiplier", 1f, 0.2F..1f)
 
-    private val bowPacket by ListValue("BowMode", arrayOf("None", "UpdatedNCP", "AAC5", "SwitchItem"), "None")
+    private val bowPacket by ListValue("BowMode", arrayOf("None", "UpdatedNCP", "AAC5", "SwitchItem", "GrimAC"), "None")
 
     private val bowForwardMultiplier by FloatValue("BowForwardMultiplier", 1f, 0.2F..1f)
     private val bowStrafeMultiplier by FloatValue("BowStrafeMultiplier", 1f, 0.2F..1f)
@@ -84,11 +84,11 @@ object NoSlow : Module("NoSlow", ModuleCategory.MOVEMENT, gameDetecting = false)
                     }
                 
                 "grimac" ->
-                    if (event.eventState == EventState.PRE) {
-                        serverSlot = (serverSlot + 1) % 9
-                        serverSlot = currentItem
-                        sendPacket(C09PacketHeldItemChange(serverSlot))
+                    if (event.eventState == EventState.PRE || event.eventState == EventState.POST) {
+                        PacketUtils.sendPacketNoEvent(C09PacketHeldItemChange((mc.thePlayer.inventory.currentItem + 1) % 9));
+                        PacketUtils.sendPacketNoEvent(C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
                     }
+
 
                 else -> return
             }
@@ -113,10 +113,9 @@ object NoSlow : Module("NoSlow", ModuleCategory.MOVEMENT, gameDetecting = false)
                         shouldSwap = false
                     }
                 "grimac" ->
-                    if (event.eventState == EventState.PRE) {
-                        serverSlot = (serverSlot + 1) % 9
-                        serverSlot = currentItem
-                        sendPacket(C09PacketHeldItemChange(serverSlot))
+                    if (event.eventState == EventState.PRE || event.eventState == EventState.POST) {
+                        PacketUtils.sendPacketNoEvent(C09PacketHeldItemChange((mc.thePlayer.inventory.currentItem + 1) % 9));
+                        PacketUtils.sendPacketNoEvent(C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
                     }
 
                 else -> return
@@ -167,10 +166,9 @@ object NoSlow : Module("NoSlow", ModuleCategory.MOVEMENT, gameDetecting = false)
                     }
                     
                 "grimac" ->
-                    if (event.eventState == EventState.PRE) {
-                        serverSlot = (serverSlot + 1) % 9
-                        serverSlot = currentItem
-                        sendPacket(C09PacketHeldItemChange(serverSlot))
+                    if (event.eventState == EventState.PRE || event.eventState == EventState.POST) {
+                        PacketUtils.sendPacketNoEvent(C09PacketHeldItemChange((mc.thePlayer.inventory.currentItem + 1) % 9));
+                        PacketUtils.sendPacketNoEvent(C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
                     }
             }
         }
