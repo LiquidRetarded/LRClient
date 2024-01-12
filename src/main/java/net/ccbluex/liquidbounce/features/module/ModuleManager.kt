@@ -206,7 +206,7 @@ object ModuleManager : Listenable {
             XRay,
             Zoot,
             KeepSprint,
-            TLZsults,
+            PlusVelocity,
         )
 
         InventoryManager.startCoroutine()
