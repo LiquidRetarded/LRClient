@@ -22,6 +22,7 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.network.play.server.*
 import net.ccbluex.liquidbounce.utils.PacketUtils
+import java.util.*
 
 
 object AntiBot : Module("AntiBot", ModuleCategory.MISC) {
