@@ -19,9 +19,9 @@ object IconUtils {
     fun getFavicon() =
         IconUtils::class.java.runCatching {
             arrayOf(
-                readImageToBuffer(getResourceAsStream("/assets/minecraft/LiquidBounce/logo_16x16.png")),
-                readImageToBuffer(getResourceAsStream("/assets/minecraft/LiquidBounce/logo_32x32.png")),
-                readImageToBuffer(getResourceAsStream("/assets/minecraft/LiquidBounce/logo_64x64.png"))
+                readImageToBuffer(getResourceAsStream("/assets/minecraft/liquidbounce/logo_16x16.png")),
+                readImageToBuffer(getResourceAsStream("/assets/minecraft/liquidbounce/logo_32x32.png")),
+                readImageToBuffer(getResourceAsStream("/assets/minecraft/liquidbounce/logo_64x64.png"))
             )
         }.onFailure {
             it.printStackTrace()
