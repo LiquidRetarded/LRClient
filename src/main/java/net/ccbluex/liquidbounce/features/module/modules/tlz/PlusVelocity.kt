@@ -24,9 +24,9 @@ import net.minecraft.network.play.server.*
 import net.minecraft.network.play.client.*
 import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook
 import net.minecraft.util.*
-import net.ccbluex.liquidbounce.ui.client.hud.element.elements.Notification
 import kotlin.math.atan2
 import kotlin.math.sqrt
+
 
 object PlusVelocity : Module("PlusVelocity", ModuleCategory.TLZ) {
 
@@ -47,7 +47,7 @@ object PlusVelocity : Module("PlusVelocity", ModuleCategory.TLZ) {
     private val resetPersec by IntegerValue("ResetPerMin", 10, 0..30) { mode == "GrimS32" }
 
     // GrimLastest credit: fyxar
-    private var onVelocity = ListValue("OnVelocity", arrayOf("Always", "CombatManager", "PacketDamage"))
+    private var onVelocity = ListValue("OnVelocity", arrayOf("Always", "CombatManager", "PacketDamage"), "Always")
 
     private var maxMotionRangeValue: IntegerValue = object: IntegerValue("MaxMotionRange", -500, -1000..1000) {
         override fun onChanged(oldValue: Int, newValue: Int) {
@@ -97,8 +97,6 @@ object PlusVelocity : Module("PlusVelocity", ModuleCategory.TLZ) {
         grimTCancel = 0
         canSpoof = false
         canCancel = false
-
-        LiquidBounce.hud.addNotification(Notification("Make sure you changed to 1.17 to use velocity.", Notification.Type.ERROR))    
     }
     // GrimLastest
     private var canSpoof = false
