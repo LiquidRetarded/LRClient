@@ -11,14 +11,12 @@ import net.ccbluex.liquidbounce.event.EventTarget
 import net.ccbluex.liquidbounce.event.PacketEvent
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
-import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.utils.ClientUtils
 import java.io.File
 import java.net.URI
 import java.net.URISyntaxException
 
-@ModuleInfo(name = "ZPackSpoofer", spacedName = "Pack Spoofer", description = "Prevents servers from forcing you to download their resource pack.", category = ModuleCategory.MISC)
-class PackSpoofer : Module() {
+object ZPackSpoofer : Module("ZPackSpoofer", ModuleCategory.TLZ) {
 
     @EventTarget
     fun onPacket(event: PacketEvent) {
@@ -52,7 +50,7 @@ class PackSpoofer : Module() {
                 mc.netHandler.addToSendQueue(C19PacketResourcePackStatus(packet.hash,
                         C19PacketResourcePackStatus.Action.SUCCESSFULLY_LOADED))
             } catch (e: URISyntaxException) {
-                ClientUtils.logger.error("Failed to handle resource pack", e)
+                ClientUtils.LOGGER.error("Failed to handle resource pack", e)
                 mc.netHandler.addToSendQueue(C19PacketResourcePackStatus(hash, C19PacketResourcePackStatus.Action.FAILED_DOWNLOAD))
             }
 
