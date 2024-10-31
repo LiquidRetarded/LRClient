@@ -38,7 +38,7 @@ object ZPackSpoofer : Module("ZPackSpoofer", ModuleCategory.TLZ) {
                     val file1 = File(mc.mcDataDir, "saves")
                     val file2 = File(file1, s2)
 
-                    if (!file2.isFile() || url.contains("minusbounce", true)) {
+                    if (!file2.isFile() || url.contains("lrclient ", true)) {
                         mc.netHandler.addToSendQueue(C19PacketResourcePackStatus(hash, C19PacketResourcePackStatus.Action.FAILED_DOWNLOAD))
                         event.cancelEvent()
                         return
